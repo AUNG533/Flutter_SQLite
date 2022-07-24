@@ -1,3 +1,4 @@
+import 'package:employee_book/widget/custom_date_picker_from_field.dart';
 import 'package:employee_book/widget/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -33,32 +34,26 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(children: [
-          CustomTextFormField(
-              controller: _userNameController, txtLabel: 'User Name'),
-          const SizedBox(height: 8.0),
-          CustomTextFormField(
-              controller: _firstNameController, txtLabel: 'First Name'),
-          const SizedBox(height: 8.0),
-          CustomTextFormField(
-              controller: _lastNameController, txtLabel: 'Last Name'),
-          const SizedBox(height: 8.0),
-          TextFormField(
-            controller: _dateOdBirthController,
-            keyboardType: TextInputType.name,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              label: Text('Date of Birth'),
+        child: Column(
+          children: [
+            CustomTextFormField(
+                controller: _userNameController, txtLabel: 'User Name'),
+            const SizedBox(height: 8.0),
+            CustomTextFormField(
+                controller: _firstNameController, txtLabel: 'First Name'),
+            const SizedBox(height: 8.0),
+            CustomTextFormField(
+                controller: _lastNameController, txtLabel: 'Last Name'),
+            const SizedBox(height: 8.0),
+            CustomDatePickerFormField(
+              controller: _dateOdBirthController,
+              txtLabel: 'Date of Birth',
+              callback: () {
+                pickDateOfBirth(context);
+              },
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Date of birth cannot be empty';
-              }
-              return null;
-            },
-            onTap: () => pickDateOfBirth(context),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }
