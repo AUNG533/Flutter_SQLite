@@ -1,3 +1,4 @@
+import 'package:employee_book/widget/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
 class AddEmployeeScreen extends StatefulWidget {
@@ -8,7 +9,10 @@ class AddEmployeeScreen extends StatefulWidget {
 }
 
 class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _dateOdBirthController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,21 +32,17 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(children: [
-          TextFormField(
-            controller: _controller,
-            keyboardType: TextInputType.name,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'User Name',
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'User name  cannot be empty';
-              }
-            },
-          ),
+          CustomTextFormField(controller: _userNameController, txtLabel: 'User Name'),
+          const SizedBox(height: 8.0),
+          CustomTextFormField(controller: _firstNameController, txtLabel: 'First Name'),
+          const SizedBox(height: 8.0),
+          CustomTextFormField(controller: _lastNameController, txtLabel: 'Last Name'),
+          const SizedBox(height: 8.0),
+          CustomTextFormField(controller: _dateOdBirthController, txtLabel: 'Date of Birth'),
+          const SizedBox(height: 8.0),
         ]),
       ),
     );
   }
 }
+
