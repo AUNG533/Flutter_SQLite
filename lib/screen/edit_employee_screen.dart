@@ -50,7 +50,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: () {
-              addEmployee();
+              editEmployee();
             },
           ),
         ],
@@ -110,19 +110,20 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
     });
   }
 
-  void addEmployee() {
+  void editEmployee() {
     final entity = EmployeeCompanion(
+      id: drift.Value(widget.id),
       userName: drift.Value(_userNameController.text),
       firstName: drift.Value(_firstNameController.text),
       lastName: drift.Value(_lastNameController.text),
       dateOfBirth: drift.Value(_dateOfBirth!),
     );
-    _db.insertEmployee(entity).then(
+    _db.updateEmployee(entity).then(
           (value) => ScaffoldMessenger.of(context).showMaterialBanner(
             MaterialBanner(
               backgroundColor: Colors.pink,
               content: Text(
-                'New employee inserted: $value',
+                'Employee Update: $value',
                 style: const TextStyle(color: Colors.white),
               ),
               actions: [
