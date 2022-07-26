@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:drift/drift.dart' as drift;
 
 class EditEmployeeScreen extends StatefulWidget {
-
   final int id;
+
   const EditEmployeeScreen({Key? key, required this.id}) : super(key: key);
 
   @override
@@ -53,6 +53,11 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
               editEmployee();
             },
           ),
+          IconButton(
+              onPressed: () {
+                deleteEmployee();
+              },
+              icon: const Icon(Icons.delete)),
         ],
       ),
       body: Padding(
@@ -122,18 +127,36 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
           (value) => ScaffoldMessenger.of(context).showMaterialBanner(
             MaterialBanner(
               backgroundColor: Colors.pink,
-              content: Text(
-                'Employee Update: $value',
-                style: const TextStyle(color: Colors.white),
-              ),
+              content: Text('Employee Update: $value',
+                  style: const TextStyle(color: Colors.white)),
               actions: [
                 TextButton(
-                  child: const Text(
-                    'Close',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  child: const Text('Close',
+                      style: TextStyle(color: Colors.white)),
                   onPressed: () =>
                       ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
+                ),
+              ],
+            ),
+          ),
+        );
+  }
+
+  void deleteEmployee() {
+    _db.deleteEmployee(widget.id).then(
+          (value) => ScaffoldMessenger.of(context).showMaterialBanner(
+            MaterialBanner(
+              backgroundColor: Colors.pink,
+              content: Text('Employee Delete: $value',
+                  style: const TextStyle(color: Colors.white)),
+              actions: [
+                TextButton(
+                  child: const Text('Close',
+                      style: TextStyle(color: Colors.white)),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                    Navigator.pop(context);
+                  },
                 ),
               ],
             ),
