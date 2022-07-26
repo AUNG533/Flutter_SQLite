@@ -13,6 +13,7 @@ class AddEmployeeScreen extends StatefulWidget {
 }
 
 class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
+  final _formKey = GlobalKey<FormState>();
   late AppDb _db;
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
@@ -55,21 +56,27 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            CustomTextFormField(
-                controller: _userNameController, txtLabel: 'User Name'),
-            const SizedBox(height: 8.0),
-            CustomTextFormField(
-                controller: _firstNameController, txtLabel: 'First Name'),
-            const SizedBox(height: 8.0),
-            CustomTextFormField(
-                controller: _lastNameController, txtLabel: 'Last Name'),
-            const SizedBox(height: 8.0),
-            CustomDatePickerFormField(
-              controller: _dateOdBirthController,
-              txtLabel: 'Date of Birth',
-              callback: () {
-                pickDateOfBirth(context);
-              },
+            Form(
+              key: _formKey,
+              child: Column(children: [
+                CustomTextFormField(
+                    controller: _userNameController, txtLabel: 'User Name'),
+                const SizedBox(height: 8.0),
+                CustomTextFormField(
+                    controller: _firstNameController, txtLabel: 'First Name'),
+                const SizedBox(height: 8.0),
+                CustomTextFormField(
+                    controller: _lastNameController, txtLabel: 'Last Name'),
+                const SizedBox(height: 8.0),
+                CustomDatePickerFormField(
+                  controller: _dateOdBirthController,
+                  txtLabel: 'Date of Birth',
+                  callback: () {
+                    pickDateOfBirth(context);
+                  },
+                ),
+              ],
+              ),
             ),
           ],
         ),
@@ -107,32 +114,37 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   }
 
   void addEmployee() {
-    final entity = EmployeeCompanion(
-      userName: drift.Value(_userNameController.text),
-      firstName: drift.Value(_firstNameController.text),
-      lastName: drift.Value(_lastNameController.text),
-      dateOfBirth: drift.Value(_dateOfBirth!),
-    );
-    _db.insertEmployee(entity).then(
-          (value) => ScaffoldMessenger.of(context).showMaterialBanner(
-            MaterialBanner(
-              backgroundColor: Colors.pink,
-              content: Text(
-                'New employee inserted: $value',
-                style: const TextStyle(color: Colors.white),
-              ),
-              actions: [
-                TextButton(
-                  child: const Text(
-                    'Close',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () =>
-                      ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
-                ),
-              ],
+    final isValid = _formKey.currentState?.validate();
+
+    if (isValid != null && isValid) {
+      final entity = EmployeeCompanion(
+        userName: drift.Value(_userNameController.text),
+        firstName: drift.Value(_firstNameController.text),
+        lastName: drift.Value(_lastNameController.text),
+        dateOfBirth: drift.Value(_dateOfBirth!),
+      );
+
+      _db.insertEmployee(entity).then(
+            (value) => ScaffoldMessenger.of(context).showMaterialBanner(
+          MaterialBanner(
+            backgroundColor: Colors.pink,
+            content: Text(
+              'New employee inserted: $value',
+              style: const TextStyle(color: Colors.white),
             ),
+            actions: [
+              TextButton(
+                child: const Text(
+                  'Close',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () =>
+                    ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
+              ),
+            ],
           ),
-        );
+        ),
+      );
+    }
   }
 }

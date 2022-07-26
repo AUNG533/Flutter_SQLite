@@ -15,6 +15,7 @@ class EditEmployeeScreen extends StatefulWidget {
 }
 
 class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
+  final _formKey = GlobalKey<FormState>();
   late AppDb _db;
   late EmployeeData _employeeData;
   final TextEditingController _userNameController = TextEditingController();
@@ -64,21 +65,28 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            CustomTextFormField(
-                controller: _userNameController, txtLabel: 'User Name'),
-            const SizedBox(height: 8.0),
-            CustomTextFormField(
-                controller: _firstNameController, txtLabel: 'First Name'),
-            const SizedBox(height: 8.0),
-            CustomTextFormField(
-                controller: _lastNameController, txtLabel: 'Last Name'),
-            const SizedBox(height: 8.0),
-            CustomDatePickerFormField(
-              controller: _dateOdBirthController,
-              txtLabel: 'Date of Birth',
-              callback: () {
-                pickDateOfBirth(context);
-              },
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  CustomTextFormField(
+                      controller: _userNameController, txtLabel: 'User Name'),
+                  const SizedBox(height: 8.0),
+                  CustomTextFormField(
+                      controller: _firstNameController, txtLabel: 'First Name'),
+                  const SizedBox(height: 8.0),
+                  CustomTextFormField(
+                      controller: _lastNameController, txtLabel: 'Last Name'),
+                  const SizedBox(height: 8.0),
+                  CustomDatePickerFormField(
+                    controller: _dateOdBirthController,
+                    txtLabel: 'Date of Birth',
+                    callback: () {
+                      pickDateOfBirth(context);
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -116,30 +124,33 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
   }
 
   void editEmployee() {
-    final entity = EmployeeCompanion(
-      id: drift.Value(widget.id),
-      userName: drift.Value(_userNameController.text),
-      firstName: drift.Value(_firstNameController.text),
-      lastName: drift.Value(_lastNameController.text),
-      dateOfBirth: drift.Value(_dateOfBirth!),
-    );
-    _db.updateEmployee(entity).then(
-          (value) => ScaffoldMessenger.of(context).showMaterialBanner(
-            MaterialBanner(
-              backgroundColor: Colors.pink,
-              content: Text('Employee Update: $value',
-                  style: const TextStyle(color: Colors.white)),
-              actions: [
-                TextButton(
-                  child: const Text('Close',
-                      style: TextStyle(color: Colors.white)),
-                  onPressed: () =>
-                      ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
-                ),
-              ],
-            ),
+    final isValid = _formKey.currentState?.validate();
+    if (isValid != null && isValid) {
+      final entity = EmployeeCompanion(
+        id: drift.Value(widget.id),
+        userName: drift.Value(_userNameController.text),
+        firstName: drift.Value(_firstNameController.text),
+        lastName: drift.Value(_lastNameController.text),
+        dateOfBirth: drift.Value(_dateOfBirth!),
+      );
+      _db.updateEmployee(entity).then(
+            (value) => ScaffoldMessenger.of(context).showMaterialBanner(
+          MaterialBanner(
+            backgroundColor: Colors.pink,
+            content: Text('Employee Update: $value',
+                style: const TextStyle(color: Colors.white)),
+            actions: [
+              TextButton(
+                child: const Text('Close',
+                    style: TextStyle(color: Colors.white)),
+                onPressed: () =>
+                    ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
+              ),
+            ],
           ),
-        );
+        ),
+      );
+    }
   }
 
   void deleteEmployee() {
