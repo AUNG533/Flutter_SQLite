@@ -12,7 +12,7 @@ class EmployeeChangeNotifier extends ChangeNotifier {
   List<EmployeeData> _employeeListFuture = [];
   List<EmployeeData> get employeeListFuture => _employeeListFuture;
   List<EmployeeData> _employeeListStream = [];
-  List<EmployeeData> get employeeListStream => _employeeListFuture;
+  List<EmployeeData> get employeeListStream => _employeeListStream;
   EmployeeData? _employeeData;
   EmployeeData? get employeeData => _employeeData;
   String _error = '';
